@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/black.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section data-markdown data-background-image="imgs/background.jpg">
+				## Java 17
+				New features
+			</section>
+			<section data-markdown data-background-image="imgs/background.jpg">
+				## Java's release cycle
+				- Since Java 10 (March 2018), Java is on a 6 month release cycle
+				- Although Java 17 is a LTS version, there are no major updates
+			</section>
+			<section data-markdown data-background-image="imgs/background.jpg">
+				## List of JEPs in Java 17
+				![List of Jeps](imgs/list-of-jeps.png "JEPs")
+			</section>
+			<section data-markdown data-background-image="imgs/background.jpg">
+				## Categories
+				- Nice developer stuff
+				- Specific developer stuff
+				- Keeping up with Apple stuff
+				- Cleaning up stuff
+			</section>
+			<section data-markdown data-separator-vertical="^\n\n" data-background-image="imgs/background.jpg">
+				## Nice developer stuff
+				![Alt text](imgs/nice-dev-stuff.png "Title")
+
+
+				### JEP 406: Pattern Matching for switch (Preview)
+				- Expand the expressiveness and applicability of switch expressions and statements by allowing patterns
+				to appear in case labels.
+				- Allow the historical null-hostility of switch to be relaxed when desired.
+				- Introduce 2 new patterns: guarded and parenthesized patterns.
+
+
+				### Old way
+				```java
+				static String formatter(Object o) {
+				String formatted = "unknown";
+				if (o instanceof Integer i) {
+				formatted = String.format("int %d", i);
+				} else if (o instanceof Long l) {
+				formatted = String.format("long %d", l);
+				} else if (o instanceof Double d) {
+				formatted = String.format("double %f", d);
+				} else if (o instanceof String s) {
+				formatted = String.format("String %s", s);
+				}
+				return formatted;
+				}
+				```
+
+
+
+				### New way
+				```java
+				static String formatterPatternSwitch(Object o) {
+				return switch (o) {
+				case Integer i -> String.format("int %d", i);
+				case Long l -> String.format("long %d", l);
+				case Double d -> String.format("double %f", d);
+				case String s -> String.format("String %s", s);
+				default -> o.toString();
+				};
+				}
+				```
+
+
+				### Guarded pattern
+				- Uses pattern && boolean expression for further refinement of the pattern:
+				```java
+				static void testTriangle(Shape s) {
+				switch (s) {
+				case Triangle t && (t.calculateArea() > 100) ->
+				System.out.println("Large triangle");
+				default ->
+				System.out.println("A shape, possibly a small triangle");
+				}
+				}
+				```
+
+
+
+				### JEP 409: Sealed Classes
+				Enhance the Java programming language with sealed classes and interfaces. Sealed classes and interfaces
+				restrict which other classes or interfaces may extend or implement them.
+
+
+				- Uses the sealed modifier in declaration and the permits clause to specify classes that are allowed to
+				extend the sealed class.
+				```java
+				public abstract sealed class Shape
+				permits Circle, Rectangle, Square { ... }
+				```
+				- The subclass must be final, sealed or non-sealed
+
+			</section>
+			<section data-markdown data-separator-vertical="^\n\n" data-background-image="imgs/background.jpg">
+				## Specific developer stuff
+				![Alt text](imgs/specific-dev-stuff.png "Title")
+
+
+				### JEP 306: Restore Always-Strict Floating-Point Semantics
+				Make floating-point operations consistently strict.
+
+
+				### JEP 356: Enhanced Pseudo-Random Number Generators
+				Provide new interface types and implementations for pseudorandom number generators (PRNGs):
+
+				to make it easier to use various PRNG algorithms and to better support stream-based operations.
+
+
+
+				### JEP 403: Strongly Encapsulate JDK Internals
+				Strongly encapsulate all non-critical internal elements of the JDK.
+
+				(sun.mis.Unsafe is still... usable)
+
+
+
+				### JEP 412: Foreign Function & Memory API (Incubator)
+				Introduce an API by which Java programs can interoperate with code and data outside of the Java runtime.
+
+
+				### JEP 414: Vector API (Second Incubator)
+				Introduce an API to express vector computations that reliably compile at runtime to optimal vector
+				instructions
+
+
+				### JEP 415: Context-Specific Deserialization Filters
+				Allow applications to configure context-specific and dynamically-selected deserialization filters
+			</section>
+			<section data-markdown data-separator-vertical="^\n\n" data-background-image="imgs/background.jpg">
+				## Keeping up with Apple stuff
+				![Alt text](imgs/apple-stuff.png "Title")
+
+
+				### JEP 382: New macOS Rendering Pipeline
+				Changed Java 2D macOS rendering pipeline (which is used in Swing for example) for macOS to use the Apple
+				Metal API instead of the deprecated Apple OpenGL API.
+
+
+				### JEP 391: macOS/AArch64 Port
+				Port the JDK to macOS/AArch64, because Apple is planning to change all their CPUs from X64 to AArch64
+				(Apple Silicon; the M1 chips)
+			</section>
+			<section data-markdown data-separator-vertical="^\n\n" data-background-image="imgs/background.jpg">
+				## Cleaning up stuff
+				![Alt text](imgs/cleanup-stuff.png "Title")
+
+
+				### JEP 398: Deprecate the Applet API for Removal
+				Applet API will be removed
+				Was deprecated since JDK 9
+				Most browser don't support it anymore
+
+
+				### JEP 407: Remove RMI Activation
+				Although RMI is still used, the RMI Activation mechanism is obsolote with the web technology of the last
+				decade
+
+
+				### JEP 410: Remove the Experimental AOT and JIT Compiler
+				Remove the experimental Java-based ahead-of-time (AOT) and just-in-time (JIT) compiler.
+
+
+				### JEP 411: Deprecate the Security Manager for Removal
+				Deprecate the Security Manager for removal in a future release. The Security Manager dates from Java
+				1.0. It has not been the primary means of securing client-side Java code for many years
+			</section>
+			<section data-markdown data-separator-vertical="^\n\n" data-background-image="imgs/background.jpg">
+				## Questions?
+
+
+				Just get the JDK and play around with at least the switch statement and sealed classes!
+			</section>
+		</div>
+	</div>
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		// More info about initialization & config:
+		// - https://revealjs.com/initialization/
+		// - https://revealjs.com/config/
+		Reveal.initialize({
+			hash: true,
+
+			// Learn about plugins: https://revealjs.com/plugins/
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+		});
+	</script>
+</body>
+
+</html>
